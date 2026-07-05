@@ -21,14 +21,10 @@ jobs:
       
       - name: Install translate-shell
         run: |
-          sudo apt-get update
-          sudo apt-get install -y tree
-          wget https://git.io/trans
-          # 下载之后首先打印文件夹结构 这样即使出错也可溯源
-          tree -lh trans
-          ls trans
-          chmod +x ./trans
-          sudo mv ./trans /usr/local/bin/
+          git clone https://github.com/soimort/translate-shell.git
+          cd translate-shell
+          make
+          sudo make install
           trans --version
      
       - name: Download dependencies
@@ -41,15 +37,10 @@ jobs:
         run: go run .
         working-directory: ${{ github.workspace }}
       
-      - name: Commit translated files
-        run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-          git add *.srt srt/*.srt
-          git diff --cached --quiet || git commit -m "chore: auto-translate subtitles [skip ci]"
-        
-      - name: Push changes
-        uses: ad-m/github-push-action@master
+      - name: Upload translated files as artifact
+        uses: actions/upload-artifact@v7
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          branch: ${{ github.ref }}
+          name: translated-srt-files
+          path: | 
+            **/*.srt
+          retention-days: 30
