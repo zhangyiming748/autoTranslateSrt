@@ -1,0 +1,49 @@
+name: Auto Translate SRT
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+jobs:
+  translate:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: '1.21'
+      
+      - name: Install translate-shell
+        run: |
+          sudo add-apt-repository ppa:kolyvan/koschei
+          sudo apt-get update
+          sudo apt-get install -y trans
+     
+      - name: Download dependencies
+        run: go mod download
+      
+      - name: Create srt directory if not exists
+        run: mkdir -p srt
+      
+      - name: Run translation program
+        run: go run .
+        working-directory: ${{ github.workspace }}
+      
+      - name: Commit translated files
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add *.srt srt/*.srt
+          git diff --cached --quiet || git commit -m "chore: auto-translate subtitles [skip ci]"
+        
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: ${{ github.ref }}
