@@ -37,9 +37,6 @@ func Translate(src string) string {
 	)
 	args = append(args, "-b", "-target", "zh-CN", src)
 	args = append(args, "-e", "google")
-	//args = append(args, "-x", "127.0.0.1:8889")
-	args = append(args, "-target", "zh-CN")
-	args = append(args, src)
 	cmd = exec.Command("trans", args...)
 	output, err := cmd.Output()
 	if err != nil {
