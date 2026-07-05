@@ -21,10 +21,11 @@ jobs:
       
       - name: Install translate-shell
         run: |
+          sudo apt-get update
+          sudo apt-get install -y tree
           wget https://git.io/trans
           # 下载之后首先打印文件夹结构 这样即使出错也可溯源
-          ls -lh trans
-          file trans
+          tree -lh
           chmod +x ./trans
           sudo mv ./trans /usr/local/bin/
           trans --version
