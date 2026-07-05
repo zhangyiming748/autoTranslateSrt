@@ -14,13 +14,8 @@ func SaveSRT(units []parse.SrtUnit, outputPath string) error {
 	}
 
 	var content string
-	for i, unit := range units {
-		content += fmt.Sprintf("%s\n%s\n%s", unit.No, unit.Time, unit.Content)
-
-		// 每个字幕块之间添加空行（最后一个不添加）
-		if i < len(units)-1 {
-			content += "\n"
-		}
+	for _, unit := range units {
+		content += fmt.Sprintf("%s\n%s\n%s\n\n", unit.No, unit.Time, unit.Content)
 	}
 
 	// 添加文件末尾换行符
