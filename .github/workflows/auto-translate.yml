@@ -21,9 +21,9 @@ jobs:
       
       - name: Install translate-shell
         run: |
-          sudo add-apt-repository ppa:kolyvan/koschei
-          sudo apt-get update
-          sudo apt-get install -y trans
+          wget https://git.io/trans
+          chmod +x ./trans
+          sudo mv ./trans /usr/local/bin/
      
       - name: Download dependencies
         run: go mod download
