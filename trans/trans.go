@@ -10,7 +10,13 @@ import (
 )
 
 func Translateshell(srtUnit []parse.SrtUnit) []parse.SrtUnit {
+	total := len(srtUnit)
 	for i := range srtUnit {
+		// 显示进度提示
+		if total > 10 && i%10 == 0 {
+			fmt.Printf("[进度 %d/%d] (%.1f%%)\n", i, total, float64(i)/float64(total)*100)
+		}
+
 		src := strings.TrimSpace(srtUnit[i].Content)
 		if src == "" {
 			continue
@@ -19,6 +25,7 @@ func Translateshell(srtUnit []parse.SrtUnit) []parse.SrtUnit {
 		// 直接修改原切片位置的内容
 		srtUnit[i].Content = Translate(src)
 	}
+	fmt.Printf("[进度 %d/%d] (100.0%%) 翻译完成\n", total, total)
 	return srtUnit
 }
 
