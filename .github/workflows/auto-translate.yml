@@ -26,7 +26,8 @@ jobs:
           make
           sudo make install
           trans --version
-     
+      - name: test trans success
+        run: trans -e google -b en:zh "test"
       - name: Download dependencies
         run: go mod download
       
